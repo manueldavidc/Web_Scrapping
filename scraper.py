@@ -24,6 +24,37 @@ from openai import OpenAI
 
 load_dotenv()
 
+# Function to download and setup ChromeDriver (you can use the function we created earlier)
+def download_chromedriver():
+    system = platform.system()
+    
+    if system == "Linux":
+        url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_linux64.zip"
+    elif system == "Darwin":  # macOS
+        url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_mac64.zip"
+    elif system == "Windows":
+        url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_win32.zip"
+    else:
+        raise Exception(f"Unsupported system: {system}")
+
+    chromedriver_zip = "chromedriver.zip"
+    chromedriver_dir = os.path.join(os.path.expanduser("~"), ".local", "bin")
+
+    os.makedirs(chromedriver_dir, exist_ok=True)
+
+    urllib.request.urlretrieve(url, chromedriver_zip)
+
+    with zipfile.ZipFile(chromedriver_zip, 'r') as zip_ref:
+        zip_ref.extractall(chromedriver_dir)
+    
+    os.remove(chromedriver_zip)
+
+    chromedriver_path = os.path.join(chromedriver_dir, "chromedriver")
+    os.chmod(chromedriver_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+
+    print(f"ChromeDriver downloaded and extracted to {chromedriver_dir}.")
+    return chromedriver_path  # Return the path to the ChromeDriver
+
 # Set up the Chrome WebDriver options
 def setup_selenium():
     options = Options()
@@ -37,6 +68,7 @@ def setup_selenium():
 
     driver = webdriver.Chrome(service=service, options=options)
     return driver
+
 
 def fetch_html_selenium(url):
     driver = setup_selenium()
