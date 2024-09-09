@@ -11,3 +11,5 @@ readability-lxml
 streamlit
 streamlit-tags
 openpyxl 
+webdriver-manager
+
