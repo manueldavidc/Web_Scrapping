@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field, create_model
 import html2text
 import tiktoken
-
+from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
