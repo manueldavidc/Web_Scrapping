@@ -24,31 +24,28 @@ from openai import OpenAI
 
 load_dotenv()
 
-# Function to download and setup ChromeDriver (you can use the function we created earlier)
+# Function to download and setup ChromeDriver
 def download_chromedriver():
-    system = platform.system()
-    
-    if system == "Linux":
-        url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_linux64.zip"
-    elif system == "Darwin":  # macOS
-        url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_mac64.zip"
-    elif system == "Windows":
-        url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_win32.zip"
-    else:
-        raise Exception(f"Unsupported system: {system}")
+    # Directly use the Linux version since GitHub Actions runs on Ubuntu
+    url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_linux64.zip"
 
     chromedriver_zip = "chromedriver.zip"
     chromedriver_dir = os.path.join(os.path.expanduser("~"), ".local", "bin")
 
+    # Ensure the directory exists
     os.makedirs(chromedriver_dir, exist_ok=True)
 
+    # Download the ChromeDriver zip file
     urllib.request.urlretrieve(url, chromedriver_zip)
 
+    # Extract the ChromeDriver to the specified directory
     with zipfile.ZipFile(chromedriver_zip, 'r') as zip_ref:
         zip_ref.extractall(chromedriver_dir)
-    
+
+    # Clean up by removing the downloaded zip file
     os.remove(chromedriver_zip)
 
+    # Make the ChromeDriver executable
     chromedriver_path = os.path.join(chromedriver_dir, "chromedriver")
     os.chmod(chromedriver_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
@@ -61,7 +58,7 @@ def setup_selenium():
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
-    
+
     # Use the ChromeDriver path from the download_chromedriver function
     chromedriver_path = download_chromedriver()
     service = Service(chromedriver_path)
