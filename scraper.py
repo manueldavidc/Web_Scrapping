@@ -4,81 +4,41 @@ import re
 import json
 from datetime import datetime
 from typing import List, Dict, Type
-import urllib.request
+
 import pandas as pd
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field, create_model
 import html2text
 import tiktoken
-from webdriver_manager.chrome import ChromeDriverManager
+
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-import os
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+
 from openai import OpenAI
-import os
-import zipfile
-import urllib.request
-import stat
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+
 load_dotenv()
 
-import os
-import platform
-import zipfile
-import urllib.request
-import stat
+# Set up the Chrome WebDriver options
 
-# Define the stable version (manually or dynamically fetched)
-STABLE_VERSION = "116.0.5845.96"  # Example version, change it to the stable one you're using
+def setup_selenium():
+    options = Options()
 
-# Function to download and setup ChromeDriver from Google Chrome Labs
-def download_chromedriver():
-    system = platform.system()
+    # adding arguments
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1920,1080")
+    
+    # Randomize user-agent to mimic different users
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    # Specify the path to the ChromeDriver
+    service = Service(r"./chromedriver-win64/chromedriver.exe")  
 
-    if system == "Linux":
-        url = f"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/{STABLE_VERSION}/linux64/chromedriver-linux64.zip"
-    elif system == "Darwin":  # macOS
-        url = f"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/{STABLE_VERSION}/mac64/chromedriver-mac64.zip"
-    elif system == "Windows":
-        url = f"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/{STABLE_VERSION}/win32/chromedriver-win32.zip"
-    else:
-        raise Exception(f"Unsupported system: {system}")
-
-    chromedriver_zip = "chromedriver.zip"
-    chromedriver_dir = os.path.join(os.path.expanduser("~"), ".local", "bin")
-
-    # Ensure the directory exists
-    os.makedirs(chromedriver_dir, exist_ok=True)
-
-    # Download the ChromeDriver zip file
-    print(f"Downloading ChromeDriver from {url}")
-    urllib.request.urlretrieve(url, chromedriver_zip)
-
-    # Extract the ChromeDriver to the specified directory
-    with zipfile.ZipFile(chromedriver_zip, 'r') as zip_ref:
-        zip_ref.extractall(chromedriver_dir)
-
-    # Clean up the downloaded zip file
-    os.remove(chromedriver_zip)
-
-    # Make the ChromeDriver executable
-    chromedriver_path = os.path.join(chromedriver_dir, "chromedriver")
-    os.chmod(chromedriver_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
-
-    print(f"ChromeDriver downloaded and extracted to {chromedriver_dir}.")
-    return chromedriver_path  # Return the path to the ChromeDriver
-
-# Example usage
-chromedriver_path = download_chromedriver()
-print(f"ChromeDriver path: {chromedriver_path}")
+    # Initialize the WebDriver
+    driver = webdriver.Chrome(service=service, options=options)
+    return driver
 
 def fetch_html_selenium(url):
     driver = setup_selenium()
@@ -322,5 +282,6 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"An error occurred: {e}")
+        
         
 
