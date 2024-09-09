@@ -18,7 +18,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from openai import OpenAI
-from webdriver_manager.chrome import ChromeDriverManager  # Importing WebDriverManager
 
 load_dotenv()
 
@@ -26,19 +25,16 @@ load_dotenv()
 
 def setup_selenium():
     options = Options()
-    
-    # Adding arguments for headless mode
-    options.add_argument("--headless")  # Run in headless mode
-    options.add_argument("--disable-gpu")  # Applicable to headless environments
-    options.add_argument("--no-sandbox")  # Required by some environments like Docker
-    options.add_argument("--disable-dev-shm-usage")  # Prevents Chrome from using too much shared memory
+
+    # adding arguments
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
     
     # Randomize user-agent to mimic different users
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-
-    # Use WebDriverManager to handle the ChromeDriver download and setup
-    service = Service(ChromeDriverManager().install())
+    # Specify the path to the ChromeDriver
+    service = Service(r"./chromedriver-win64/chromedriver.exe")  
 
     # Initialize the WebDriver
     driver = webdriver.Chrome(service=service, options=options)
@@ -286,4 +282,5 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"An error occurred: {e}")
+        
 
