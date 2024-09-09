@@ -25,19 +25,13 @@ from openai import OpenAI
 load_dotenv()
 
 # Set up the Chrome WebDriver options
-
-
-
 def setup_selenium():
     options = Options()
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
 
-    # Get ChromeDriver path from environment variable
-    chrome_driver_path = os.getenv('CHROMEDRIVER_PATH', './chromedriver')
-
-    service = Service(chrome_driver_path)
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
