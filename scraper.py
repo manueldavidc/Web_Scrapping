@@ -30,8 +30,11 @@ def setup_selenium():
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
+    
+    # Use the ChromeDriver path from the download_chromedriver function
+    chromedriver_path = download_chromedriver()
+    service = Service(chromedriver_path)
 
-    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
