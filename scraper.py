@@ -4,7 +4,7 @@ import re
 import json
 from datetime import datetime
 from typing import List, Dict, Type
-
+import urllib.request
 import pandas as pd
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field, create_model
