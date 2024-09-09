@@ -1,0 +1,23 @@
+name: Selenium Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set executable permissions for chromedriver
+      run: chmod +x ./chromedriver
+
+    - name: Install Chrome
+      run: sudo apt-get install google-chrome-stable
+
+    - name: Run Selenium Tests
+      run: python scraper.py  # Replace this with the script you want to run
