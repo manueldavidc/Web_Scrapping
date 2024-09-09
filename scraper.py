@@ -21,7 +21,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from openai import OpenAI
-
+import os
+import zipfile
+import urllib.request
+import stat
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 load_dotenv()
 
 # Function to download and setup ChromeDriver
