@@ -18,6 +18,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from openai import OpenAI
+from webdriver_manager.chrome import ChromeDriverManager  # Importing WebDriverManager
 
 load_dotenv()
 
@@ -33,8 +34,9 @@ def setup_selenium():
     
     # Randomize user-agent to mimic different users
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-    # Specify the path to the ChromeDriver
-    service = Service(r"./chromedriver-win64/chromedriver.exe")  
+    
+    # Use WebDriverManager to handle the ChromeDriver download and setup
+    service = Service(ChromeDriverManager().install())
 
     # Initialize the WebDriver
     driver = webdriver.Chrome(service=service, options=options)
@@ -282,4 +284,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"An error occurred: {e}")
-        
+
